@@ -1,0 +1,19 @@
+ ------------------------------------
+ Guard.js - JavaScript API call validation library
+ ------------------------------------
+
+ About:
+   Guard.js is a library which helps validating API calls in your library.
+   
+ Usage:
+   myLibrary.myFunction	= function(sName, fHandler, bDirection) {
+       // Validate arguments
+       Guard(arguments, [
+           ["name",      String],          // 'name' is required, must be string
+           ["handler",   Function]         // 'handler' is required, must be function
+           ["direction", Boolean, true]    // 'direction' is optional, if passed must be boolean
+       ]);
+       
+       // Execute your library code here
+
+   };

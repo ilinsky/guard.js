@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test</title>
+		<!-- Guard.js -->
+		<script type="text/javascript" src="guard.js"></script>
+		<!-- My library -->
+		<script type="text/javascript">
+		function apiFunction(bRequiredBoolean, nRequiredNumber, fOptionalFunction, oOptionalArrayNullAllowed) {
+			Guard(arguments, [
+				["requiredBoolean", 			Boolean],
+				["requiredNumber",				Number],
+				["optionalFunction",			Function,	true],
+				["OptionalArrayNullAllowed",	Array,		true, true]
+			]);
+
+			// Implementation
+		}
+		</script>
+	</head>
+
+	<body>
+		<!-- Test -->
+		<script type="text/javascript">
+		function test_apiFunction() {
+			//
+			var bPassed;
+
+			// 1: Positive tests
+			fWrite("<h3>Positive tests</h3>");
+			
+			// All required arguments (literals) passed of proper types
+			bPassed	= true;
+			try {
+				apiFunction(true, 2);
+			}
+			catch (e) {
+				bPassed	= false;
+			}
+			fReport(bPassed, "All required arguments (literals) passed of proper types");
+
+			// All required arguments and both optional (literals) passed of proper type 
+			bPassed	= true;
+			try {
+				apiFunction(true, 2, function(){}, []);
+			}
+			catch (e) {
+				bPassed	= false;
+			}
+			fReport(bPassed, "All required arguments and both optional (literals) passed of proper type");
+
+			// All required arguments and both optional (objects) passed of proper type 
+			bPassed	= true;
+			try {
+				apiFunction(new Boolean, new Number, new Function, new Array);
+			}
+			catch (e) {
+				bPassed	= false;
+			}
+			fReport(bPassed, "All required arguments and both optional (objects) passed of proper type");
+
+			// All required arguments and both optional (objects) passed of proper type 
+			bPassed	= true;
+			try {
+				apiFunction(true, 0, function(){}, null);
+			}
+			catch (e) {
+				bPassed	= false;
+			}
+			fReport(bPassed, "All required arguments and both optional (objects) passed of proper type");
+
+
+			// 2: Negative tests
+			fWrite("<h3>Negative tests</h3>");
+
+			// None of required arguments passed
+			bPassed	= false;
+			try {
+				apiFunction();
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_MISSING_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "None of required arguments passed");
+
+			// Only one required arguments passed, second one is missing
+			bPassed	= false;
+			try {
+				apiFunction(true);
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_MISSING_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "Only one required arguments passed, second one is missing");
+
+			// All required arguments passed, second of wrong type
+			bPassed	= false;
+			try {
+				apiFunction(true, true);
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_WRONG_TYPE_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "All required arguments passed, second of wrong type");
+			
+			// All required arguments passed, second null
+			bPassed	= false;
+			try {
+				apiFunction(true, null);
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_NULL_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "All required arguments passed, second null");
+
+			// All required arguments passed of proper type, third optional null which is not allowed
+			bPassed	= false;
+			try {
+				apiFunction(true, 1, null);
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_NULL_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "All required arguments passed of proper type, third optional null which is not allowed");
+
+			// All required arguments passed of proper type, third optional of wrong type
+			bPassed	= false;
+			try {
+				apiFunction(true, 1, []);
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_WRONG_TYPE_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "All required arguments passed of proper type, third optional of wrong type");
+
+			// All required arguments passed of proper type, forth optional of wrong type
+			bPassed	= false;
+			try {
+				apiFunction(true, 1, function(){}, 0);
+			}
+			catch (e) {
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_WRONG_TYPE_ERR)
+					bPassed	= true;
+			}
+			fReport(bPassed, "All required arguments passed of proper type, forth optional of wrong type");
+		}
+
+		// Reporter
+		function fWrite(sMessage) {
+			var oElement	= document.getElementById("report").appendChild(document.createElement("div"));
+			oElement.innerHTML	= sMessage;
+		}
+		function fReport(bResult, sMessage) {
+			fWrite((bResult ? '<span style="color:green">#pass</span>' : '<span style="color:red">#fail</span>') + ": " + sMessage);
+		}
+		</script>
+		<button onclick="test_apiFunction()">test</button>
+		<div id="report"></div>
+	</body>
+</html>
