@@ -6,7 +6,7 @@
    Guard.js is a library which helps validating API calls in your library.
    
  Usage:
-   myLibrary.myFunction	= function myFunction(sName, fHandler, bDirection) {
+   function myLibraryFunction(sName, fHandler, bDirection) {
        // Validate arguments
        Guard(arguments, [
            ["name",      String],          // 'name' is required, must be string
@@ -15,15 +15,18 @@
        ]);
        
        // Execute your library code here
-
+       return "the output of myLibraryFunction";
    };
    
-   >>> myLibrary.myFunction()
-   >>> [Exception... Missing required 1st argument "name" in "myFunction" function call]
+   >>> myLibraryFunction()
+   >>> [Exception... Missing required 1st argument "name" in "myLibraryFunction" function call]
    
-   >>> myLibrary.myFunction("test", true)
-   >>> [Exception... Incompatible type of 2nd argument "handler" in "myFunction" function call]
+   >>> myLibraryFunction("test", true)
+   >>> [Exception... Incompatible type of 2nd argument "handler" in "myLibraryFunction" function call]
    
-   >>> myLibrary.myFunction("test", null)
-   >>> [Exception... null is not allowed value of 2nd argument "handler" in "myFunction" function call]
+   >>> myLibraryFunction("test", null)
+   >>> [Exception... null is not allowed value of 2nd argument "handler" in "myLibraryFunction" function call]
+   
+   >>> myLibraryFunction("test", new Function, true);
+   >>> the output of myLibraryFunction
    
