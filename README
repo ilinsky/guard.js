@@ -10,7 +10,7 @@
        // Validate arguments
        Guard(arguments, [
            ["name",      String],          // 'name' is required, must be string
-           ["handler",   Function]         // 'handler' is required, must be function
+           ["handler",   Function],        // 'handler' is required, must be function
            ["direction", Boolean, true]    // 'direction' is optional, if passed must be boolean
        ]);
        
