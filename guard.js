@@ -7,7 +7,7 @@
  */
 
 (function(scope) {
-	// Function fGuard
+	// Function Guard
 	var fGuard;
 	(fGuard	= function(aArguments, aParameters) {
 		// Determing API caller function reference
@@ -16,23 +16,23 @@
 		try {
 			fCaller		= fGuard.caller.caller;
 		} catch (oError) {}
-	
+
 		// Determine fGuard caller function name
 		var sFunction	= "<anonymous>";
 		try {
 			sFunction	= String(fGuard.caller).match(rFunction) ? RegExp.$1 : "<anonymous>";
 		} catch (oError) {}
 
-		// Validate arguments 
+		// Validate arguments
 		for (var nIndex = 0, aParameter, nLength = aArguments.length, vValue, sArgument; aParameter = aParameters[nIndex]; nIndex++) {
 			vValue		= aArguments[nIndex];
 			sArgument	=(nIndex + 1)+ aEndings[nIndex < 3 ? nIndex : 3];
-	
+
 			// See if argument is missing
 			if (nLength < nIndex + 1 && !aParameter[2])
 				throw new fGuard.Exception(
-							fGuard.Exception.ARGUMENT_MISSING_ERR, 
-							fCaller, 
+							fGuard.Exception.ARGUMENT_MISSING_ERR,
+							fCaller,
 							[sArgument, aParameter[0], sFunction]
 				)
 
@@ -41,8 +41,8 @@
 					// See if null is not allowed
 					if (!aParameter[3])
 						throw new fGuard.Exception(
-								fGuard.Exception.ARGUMENT_NULL_ERR, 
-								fCaller, 
+								fGuard.Exception.ARGUMENT_NULL_ERR,
+								fCaller,
 								[sArgument, aParameter[0], sFunction]
 						)
 				}
@@ -50,7 +50,7 @@
 					// See if argument has correct type
 					if (!fInstanceOf(vValue, aParameter[1]))
 						throw new fGuard.Exception(
-								fGuard.Exception.ARGUMENT_WRONG_TYPE_ERR, 
+								fGuard.Exception.ARGUMENT_WRONG_TYPE_ERR,
 								fCaller,
 								[sArgument, aParameter[0], sFunction, String(aParameter[1]).match(rFunction) ? RegExp.$1 : "<unknown>"]
 						)
@@ -60,7 +60,7 @@
 	}).toString	= function() {
 		return "[Guard]";
 	};
-	
+
 	// Public API function
 	(fGuard.instanceOf	= function(vValue, cType) {
 		// Guard
@@ -74,8 +74,8 @@
 	}).toString	= function() {
 		return "function instanceOf() {\n\t[guard code]\n}";
 	};
-	
-	// Class fGuard.Exception
+
+	// Function Guard.Exception
 	(fGuard.Exception	= function(nException, fCaller, aArguments) {
 		this.code	= nException;
 		this.message= fFormat(fGuard.Exception.messages[nException], aArguments);
@@ -83,23 +83,30 @@
 	}).toString	= function() {
 		return "[Guard.Exception]";
 	};
-	
+
 	fGuard.Exception.ARGUMENT_MISSING_ERR		= 1;
 	fGuard.Exception.ARGUMENT_WRONG_TYPE_ERR	= 2;
 	fGuard.Exception.ARGUMENT_NULL_ERR			= 3;
-	
+
 	fGuard.Exception.prototype.code		= null;
 	fGuard.Exception.prototype.message	= null;
 	fGuard.Exception.prototype.caller	= null;
-	
+
 	fGuard.Exception.prototype.toString	= function() {
 		return "[Exception... " + this.message + " code:" + this.code + " caller:" + this.caller + "]";
 	};
-	
+
 	fGuard.Exception.messages	= {};
 	fGuard.Exception.messages[fGuard.Exception.ARGUMENT_MISSING_ERR]	= 'Missing required %0 argument "%1" in "%2" function call.';
 	fGuard.Exception.messages[fGuard.Exception.ARGUMENT_WRONG_TYPE_ERR]	= 'Incompatible type of %0 argument "%1" in "%2" function call. Expecting "%3".';
 	fGuard.Exception.messages[fGuard.Exception.ARGUMENT_NULL_ERR]		= 'null is not allowed value of %0 argument "%1" in "%2" function call.';
+
+	// Function Guard.Arguments (pseudo type for JavaScript arguments object)
+	(fGuard.Arguments	= function() {
+
+	}).toString	= function() {
+		return "function Arguments() {\n\t[guard code]\n}";
+	};
 
 	// Utility functions etc
 	var aEndings	= 'st-nd-rd-th'.split('-'),
@@ -120,16 +127,21 @@
 			if (typeof vValue == "number")
 				return true;
 		}
+		// Special type Guard.Arguments (pseudo type for JavaScript arguments object)
+		else
+		if (cType == fGuard.Arguments) {
+			return typeof vValue == "object" && "callee" in vValue;
+		}
 		// Complex types
 		return cType == Object ? true : vValue instanceof cType;
 	};
-	
+
 	function fFormat(sMessage, aArguments) {
 		for (var nIndex = 0; nIndex < aArguments.length; nIndex++)
 			sMessage	= sMessage.replace('%' + nIndex, aArguments[nIndex]);
 		return sMessage;
 	};
-	
+
 	// Expose object
 	scope.Guard	= fGuard;
 })(this);

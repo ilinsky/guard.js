@@ -3,30 +3,36 @@
  ------------------------------------
 
  About:
-   Guard.js is a library which helps validating API calls in your library.
-   
+   Guard.js is a library which helps validating API calls in your project
+
  Usage:
-   function myLibraryFunction(sName, fHandler, bDirection) {
+   function myLibraryFunction(sName, fHandler, bDirection, oArguments) {
        // Validate arguments
        Guard(arguments, [
-           ["name",      String],          // 'name' is required, must be string
-           ["handler",   Function],        // 'handler' is required, must be function
-           ["direction", Boolean, true]    // 'direction' is optional, if passed must be boolean
+           ["name",      String],               // 'name' is required, must be string
+           ["handler",   Function],             // 'handler' is required, must be function
+           ["direction", Boolean, true, true],  // 'direction' is optional, if passed must be boolean or null
+           ["arguments", Guard.Arguments, true] // 'arguments' is optional, if passed must be JS arguments object
        ]);
-       
+
        // Execute your library code here
        return "the output of myLibraryFunction";
    };
-   
+
    >>> myLibraryFunction()
    >>> [Exception... Missing required 1st argument "name" in "myLibraryFunction" function call]
-   
+
    >>> myLibraryFunction("test", true)
    >>> [Exception... Incompatible type of 2nd argument "handler" in "myLibraryFunction" function call]
-   
+
    >>> myLibraryFunction("test", null)
    >>> [Exception... null is not allowed value of 2nd argument "handler" in "myLibraryFunction" function call]
-   
-   >>> myLibraryFunction("test", new Function, true);
+
+   >>> myLibraryFunction("test", function(){}, undefined)
+   >>> [Exception... Incompatible type of 3rd argument "direction" in "myLibraryFunction" function call]
+
+   >>> myLibraryFunction("test", new Function)
    >>> the output of myLibraryFunction
-   
+
+   >>> (function(){return myLibraryFunction("test", new Function, true, arguments)})()
+   >>> the output of myLibraryFunction
