@@ -58,7 +58,7 @@
 			}
 		}
 	}).toString	= function() {
-		return "[fGuard]";
+		return "[Guard]";
 	};
 	
 	// Public API function
@@ -81,7 +81,7 @@
 		this.message= fFormat(fGuard.Exception.messages[nException], aArguments);
 		this.caller	= fCaller;
 	}).toString	= function() {
-		return "[fGuard.Exception]";
+		return "[Guard.Exception]";
 	};
 	
 	fGuard.Exception.ARGUMENT_MISSING_ERR		= 1;
