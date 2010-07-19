@@ -6,12 +6,12 @@
 		<script type="text/javascript" src="guard.js"></script>
 		<!-- My library -->
 		<script type="text/javascript">
-		function apiFunction(bRequiredBoolean, nRequiredNumber, fOptionalFunction, oOptionalArrayNullAllowed) {
+		function apiFunction(bRequiredBoolean, nRequiredNumber, fOptionalFunction, aOptionalArrayNullAllowed) {
 			Guard(arguments, [
 				["requiredBoolean", 			Boolean],
 				["requiredNumber",				Number],
 				["optionalFunction",			Function,	true],
-				["OptionalArrayNullAllowed",	Array,		true, true]
+				["optionalArrayNullAllowed",	Array,		true, true]
 			]);
 
 			// Implementation
@@ -28,7 +28,7 @@
 
 			// 1: Positive tests
 			fWrite("<h3>Positive tests</h3>");
-			
+
 			// All required arguments (literals) passed of proper types
 			bPassed	= true;
 			try {
@@ -39,7 +39,7 @@
 			}
 			fReport(bPassed, "All required arguments (literals) passed of proper types");
 
-			// All required arguments and both optional (literals) passed of proper type 
+			// All required arguments and both optional (literals) passed of proper type
 			bPassed	= true;
 			try {
 				apiFunction(true, 2, function(){}, []);
@@ -49,7 +49,7 @@
 			}
 			fReport(bPassed, "All required arguments and both optional (literals) passed of proper type");
 
-			// All required arguments and both optional (objects) passed of proper type 
+			// All required arguments and both optional (objects) passed of proper type
 			bPassed	= true;
 			try {
 				apiFunction(new Boolean, new Number, new Function, new Array);
@@ -59,7 +59,7 @@
 			}
 			fReport(bPassed, "All required arguments and both optional (objects) passed of proper type");
 
-			// All required arguments and both optional (objects) passed of proper type 
+			// All required arguments and both optional (objects) passed of proper type
 			bPassed	= true;
 			try {
 				apiFunction(true, 0, function(){}, null);
@@ -105,7 +105,7 @@
 					bPassed	= true;
 			}
 			fReport(bPassed, "All required arguments passed, second of wrong type");
-			
+
 			// All required arguments passed, second null
 			bPassed	= false;
 			try {
