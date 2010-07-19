@@ -52,7 +52,7 @@
 						throw new fGuard.Exception(
 								fGuard.Exception.ARGUMENT_WRONG_TYPE_ERR, 
 								fCaller,
-								[sArgument, aParameter[0], sFunction, String(aParameter[1]).match(rFunction) ? RegExp.$1 : "<Unknown>"]
+								[sArgument, aParameter[0], sFunction, String(aParameter[1]).match(rFunction) ? RegExp.$1 : "<unknown>"]
 						)
 				}
 			}
@@ -78,11 +78,7 @@
 	// Class fGuard.Exception
 	(fGuard.Exception	= function(nException, fCaller, aArguments) {
 		this.code	= nException;
-		this.message=(function(sMessage) {
-							for (var nIndex = 0; nIndex < aArguments.length; nIndex++)
-								sMessage	= sMessage.replace('%' + nIndex, aArguments[nIndex]);
-							return sMessage;
-					})(fGuard.Exception.messages[nException]);
+		this.message= fFormat(fGuard.Exception.messages[nException], aArguments);
 		this.caller	= fCaller;
 	}).toString	= function() {
 		return "[fGuard.Exception]";
@@ -107,7 +103,7 @@
 
 	// Utility functions etc
 	var aEndings	= 'st-nd-rd-th'.split('-'),
-		rFunction	= /function ([^\s]*)\(/;
+		rFunction	= /function ([^\s]+)\(/;
 	function fInstanceOf(vValue, cType) {
 		// Primitive types
 		if (cType == String) {
@@ -125,7 +121,13 @@
 				return true;
 		}
 		// Complex types
-		return vValue instanceof cType;
+		return cType == Object ? true : vValue instanceof cType;
+	};
+	
+	function fFormat(sMessage, aArguments) {
+		for (var nIndex = 0; nIndex < aArguments.length; nIndex++)
+			sMessage	= sMessage.replace('%' + nIndex, aArguments[nIndex]);
+		return sMessage;
 	};
 	
 	// Expose object
