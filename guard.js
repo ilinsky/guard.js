@@ -155,5 +155,5 @@
 	};
 
 	// Expose object
-	scope.Guard	= fGuard;
+	scope == window ? Guard	= fGuard : scope.Guard	= fGuard;
 })(this);
