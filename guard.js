@@ -7,20 +7,35 @@
  */
 
 (function(scope) {
-	// Function Guard
 	var fGuard;
+
+	// Function Guard
 	(fGuard	= function(aArguments, aParameters) {
+		// Validate call to Guard (Extreme, but we are the public library ourselves!)
+		// Note! Comment out this validation call once you've learnt Guard.js API ;)
+		fValidate(fGuard, arguments, [
+			["arguments",	fGuard.Arguments],
+			["parameters",	Array]
+		]);
+		// Validate call to public library API function
+		return fValidate(fGuard, aArguments, aParameters);
+	}).toString	= function() {
+		return "function Guard() {\n\t[guard code]\n}";
+	};
+
+	// Validation implementation
+	function fValidate(fCallee, aArguments, aParameters) {
+		// Determine fGuard caller function name
+		var sFunction	= "<anonymous>";
+		try {
+			sFunction	= String(fCallee).match(rFunction) ? RegExp.$1 : "<anonymous>";
+		} catch (oError) {}
+
 		// Determing API caller function reference
 		var fCaller		= null;
 		// Has to be wrapped in try/catch because Firebug throws "Permission denied to get property on Function.caller" in XMLHttpRequest
 		try {
-			fCaller		= fGuard.caller.caller;
-		} catch (oError) {}
-
-		// Determine fGuard caller function name
-		var sFunction	= "<anonymous>";
-		try {
-			sFunction	= String(fGuard.caller).match(rFunction) ? RegExp.$1 : "<anonymous>";
+			fCaller		= fCallee.caller;
 		} catch (oError) {}
 
 		// Validate arguments
@@ -57,22 +72,44 @@
 				}
 			}
 		}
-	}).toString	= function() {
-		return "function Guard() {\n\t[guard code]\n}";
 	};
 
 	// Public API function
 	(fGuard.instanceOf	= function(vValue, cType) {
-		// Guard
-		fGuard(arguments, [
+		// Validate own call (we call fValidate here directly instead of fGuard as we are sure we pass proper arguments!)
+		fValidate(fGuard.instanceOf, arguments, [
 				["value",	Object],
 				["type",	Function]
 		]);
-
 		// Invoke
 		return fInstanceOf(vValue, cType);
 	}).toString	= function() {
 		return "function instanceOf() {\n\t[guard code]\n}";
+	};
+
+	function fInstanceOf(vValue, cType) {
+		// Primitive types
+		if (cType == String) {
+			if (typeof vValue == "string")
+				return true;
+		}
+		else
+		if (cType == Boolean) {
+			if (typeof vValue == "boolean")
+				return true;
+		}
+		else
+		if (cType == Number) {
+			if (typeof vValue == "number")
+				return true;
+		}
+		// Special type Guard.Arguments (pseudo type for JavaScript arguments object)
+		else
+		if (cType == fGuard.Arguments) {
+			return typeof vValue == "object" && "callee" in vValue;
+		}
+		// Complex types
+		return cType == Object ? true : vValue instanceof cType;
 	};
 
 	// Function Guard.Exception
@@ -111,31 +148,6 @@
 	// Utility functions etc
 	var aEndings	= 'st-nd-rd-th'.split('-'),
 		rFunction	= /function ([^\s]+)\(/;
-	function fInstanceOf(vValue, cType) {
-		// Primitive types
-		if (cType == String) {
-			if (typeof vValue == "string")
-				return true;
-		}
-		else
-		if (cType == Boolean) {
-			if (typeof vValue == "boolean")
-				return true;
-		}
-		else
-		if (cType == Number) {
-			if (typeof vValue == "number")
-				return true;
-		}
-		// Special type Guard.Arguments (pseudo type for JavaScript arguments object)
-		else
-		if (cType == fGuard.Arguments) {
-			return typeof vValue == "object" && "callee" in vValue;
-		}
-		// Complex types
-		return cType == Object ? true : vValue instanceof cType;
-	};
-
 	function fFormat(sMessage, aArguments) {
 		for (var nIndex = 0; nIndex < aArguments.length; nIndex++)
 			sMessage	= sMessage.replace('%' + nIndex, aArguments[nIndex]);
