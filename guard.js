@@ -44,7 +44,7 @@
 			sArgument	=(nIndex + 1)+ aEndings[nIndex < 3 ? nIndex : 3];
 
 			// See if argument is missing
-			if (nLength < nIndex + 1 && !aParameter[2])
+			if (typeof vValue == "undefined" && !aParameter[2])
 				throw new fGuard.Exception(
 							fGuard.Exception.ARGUMENT_MISSING_ERR,
 							fCaller,
