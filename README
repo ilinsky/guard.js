@@ -3,7 +3,7 @@
  ------------------------------------
 
  About:
-   Guard.js is a library which helps validating API calls in your project
+   Guard.js is a library that helps validating API calls in your project
 
  Usage:
    function myLibraryFunction(sName, fHandler, bDirection, oArguments) {
@@ -36,3 +36,19 @@
 
    >>> (function(){return myLibraryFunction("test", new Function, true, arguments)})()
    >>> the output of myLibraryFunction
+
+ Data types support:
+   Primitive types
+     - String
+     - Number
+     - Boolean
+     - Object
+   Complex Types
+     - Array
+     - Function
+     - Date
+     - RegExp
+   Special Types
+     - Guard.Arguments (to designate JavaScript function arguments)
+   User-defined types
+     - any custom types supported
