@@ -101,7 +101,7 @@
 		else
 		if (cType == Number) {
 			if (typeof vValue == "number")
-				return true;
+				return !isNaN(vValue);
 		}
 		// Special type Guard.Arguments (pseudo type for JavaScript arguments object)
 		else
