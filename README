@@ -7,7 +7,7 @@
    This is useful for authors of JavaScript libraries, not end-users
 
  Usage:
-   // Library code
+   // Your library code
    function myLibraryFunction(sName, fHandler, bDirection, oArguments) {
        // Validate API arguments
        Guard(arguments, [
@@ -23,16 +23,16 @@
 
    // User code
    >>> myLibraryFunction()
-   >>> [Exception... Missing required 1st argument "name" in "myLibraryFunction" function call]
+   >>> [Exception... Missing 1st required argument "name" in "myLibraryFunction" function call]
 
    >>> myLibraryFunction("test", true)
-   >>> [Exception... Incompatible type of 2nd argument "handler" in "myLibraryFunction" function call]
+   >>> [Exception... Incompatible type of 2nd argument "handler" in "myLibraryFunction" function call. Expected "Function", got "Boolean"]
 
    >>> myLibraryFunction("test", null)
    >>> [Exception... null is not allowed value of 2nd argument "handler" in "myLibraryFunction" function call]
 
    >>> myLibraryFunction("test", function(){}, undefined)
-   >>> [Exception... Incompatible type of 3rd argument "direction" in "myLibraryFunction" function call]
+   >>> [Exception... Incompatible type of 3rd argument "direction" in "myLibraryFunction" function call. Expected "Boolean", got "undefined"]
 
    >>> myLibraryFunction("test", new Function)
    >>> the output of myLibraryFunction
@@ -55,3 +55,24 @@
      - Guard.Arguments (to designate JavaScript function arguments type)
    User-defined types
      - any custom types supported
+
+ Supplementary APIs:
+
+   /*Boolean*/ Guard.instanceOf(/*Variant*/ value, /*Function*/ type)
+
+   >>> Guard.instanceOf([], Array)
+   >>> true
+
+   >>> Guard.instanceOf("1", String)
+   >>> true
+
+   >>> Guard.instanceOf("2", Number)
+   >>> false
+
+   /*Function*/ Guard.typeOf(/*Variant*/ value)
+
+   >>> Guard.typeOf(1)
+   >>> Number()
+
+   >>> Guard.typeOf(function(){})
+   >>> Function()
