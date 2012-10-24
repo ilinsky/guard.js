@@ -25,14 +25,14 @@
 
 	// Validation implementation
 	function fValidate(fCallee, aArguments, aParameters) {
-		// Determine fGuard caller function name
-		var sFunction	= String(fCallee).match(rFunction) ? RegExp.$1 : "<anonymous>";
 		// Determining API caller function reference
 		var fCaller		= null;
 		// Has to be wrapped in try/catch because Firebug throws "Permission denied to get property on Function.caller" in XMLHttpRequest
 		try {
 			fCaller		= fCallee.caller;
 		} catch (oError) {}
+		// Determine fGuard caller function name
+		var sFunction	= String(fCallee).match(rFunction) ? RegExp.$1 : "<anonymous>";
 
 		// Validate arguments
 		for (var nIndex = 0, aParameter, nLength = aArguments.length, vValue, bUndefined, sArgument; aParameter = aParameters[nIndex]; nIndex++) {
@@ -75,8 +75,8 @@
 	(fGuard.instanceOf	= function(vValue, cType) {
 		// Validate own call (we call fValidate here directly instead of fGuard as we are sure we pass proper arguments!)
 		fValidate(fGuard.instanceOf, arguments, [
-				["value",	Object],
-				["type",	Function]
+			["value",	Object],
+			["type",	Function]
 		]);
 		// Invoke
 		return fInstanceOf(vValue, cType);
@@ -85,34 +85,34 @@
 	};
 
 	function fInstanceOf(vValue, cType) {
-		// Primitive types
-		if (cType == String) {
-			if (typeof vValue == "string")
-				return true;
+		var sType	= Object.prototype.toString.call(vValue).match(rObject)[1];
+		switch (cType) {
+			// Primitive types
+			case String:
+				return sType == "String";
+			case Boolean:
+				return sType == "Boolean";
+			case Number:
+				return sType == "Number" &&!isNaN(vValue);
+			case Array:
+				return sType == "Array";
+			case Function:
+				return sType == "Function";
+			case RegExp:
+				return sType == "RegExp";
+				// Special type Guard.Arguments (pseudo type for JavaScript arguments object)
+			case fGuard.Arguments:
+				return typeof vValue == "object" && "callee" in vValue;
+			default:
+				// Complex types
+				return cType == Object ? true : vValue instanceof cType;
 		}
-		else
-		if (cType == Boolean) {
-			if (typeof vValue == "boolean")
-				return true;
-		}
-		else
-		if (cType == Number) {
-			if (typeof vValue == "number")
-				return !isNaN(vValue);
-		}
-		// Special type Guard.Arguments (pseudo type for JavaScript arguments object)
-		else
-		if (cType == fGuard.Arguments) {
-			return typeof vValue == "object" && "callee" in vValue;
-		}
-		// Complex types
-		return cType == Object ? true : vValue instanceof cType;
 	};
 
 	(fGuard.typeOf	= function(vValue) {
 		// Validate own call (we call fValidate here directly instead of fGuard as we are sure we pass proper arguments!)
 		fValidate(fGuard.instanceOf, arguments, [
-				["value",	Object]
+			["value",	Object]
 		]);
 		// Invoke
 		return fTypeOf(vValue);
@@ -121,19 +121,7 @@
 	};
 
 	function fTypeOf(vValue) {
-		if (typeof vValue == "string")
-			return String;
-		else
-		if (typeof vValue == "boolean")
-			return Boolean;
-		else
-		if (typeof vValue == "number")
-			return Number;
-		else
-		if (typeof vValue == "object" && "callee" in vValue)
-			return fGuard.Arguments;
-		else
-			return vValue.constructor;
+		return typeof vValue == "object" && "callee" in vValue ? fGuard.Arguments : vValue.constructor;
 	};
 
 	// Function Guard.Exception
@@ -171,6 +159,7 @@
 
 	// Utility functions etc
 	var aEndings	= 'st-nd-rd-th'.split('-'),
+		rObject		= /object\s([^\s]+)\]/,
 		rFunction	= /function ([^\s]+)\(/;
 	function fFormat(sMessage, aArguments) {
 		for (var nIndex = 0; nIndex < aArguments.length; nIndex++)
