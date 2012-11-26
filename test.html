@@ -101,7 +101,7 @@
 				apiFunction(true, true);
 			}
 			catch (e) {
-				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_WRONG_TYPE_ERR)
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_TYPE_ERR)
 					bPassed	= true;
 			}
 			fReport(bPassed, "All required arguments passed, second of wrong type");
@@ -134,7 +134,7 @@
 				apiFunction(true, 1, []);
 			}
 			catch (e) {
-				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_WRONG_TYPE_ERR)
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_TYPE_ERR)
 					bPassed	= true;
 			}
 			fReport(bPassed, "All required arguments passed of proper type, third optional of wrong type");
@@ -145,7 +145,7 @@
 				apiFunction(true, 1, function(){}, 0);
 			}
 			catch (e) {
-				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_WRONG_TYPE_ERR)
+				if (e instanceof Guard.Exception && e.code == Guard.Exception.ARGUMENT_TYPE_ERR)
 					bPassed	= true;
 			}
 			fReport(bPassed, "All required arguments passed of proper type, forth optional of wrong type");
