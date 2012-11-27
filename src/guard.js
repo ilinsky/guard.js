@@ -9,13 +9,7 @@
 // Validation implementation
 var fGuard	= function(aArguments, aParameters) {
 	// Determining API caller function reference
-	var fCallee	= aArguments.callee,
-		fCaller	= null;
-
-	// Has to be wrapped in try/catch because Firebug throws "Permission denied to get property on Function.caller" in XMLHttpRequest
-	try {
-		fCaller	= fCallee.caller;
-	} catch (oError) {}
+	var fCallee	= aArguments.callee;
 
 	// Determine fGuard caller function name
 	var sName	= cString(fCallee).match(rGuard_function) ? cRegExp.$1 : "<anonymous>";
