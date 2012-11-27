@@ -57,7 +57,7 @@ function fGuard_instanceOf(vValue, cType) {
 		case cBoolean:
 			return sType == "Boolean";
 		case cNumber:
-			return sType == "Number" &&!fIsNaN(vValue);
+			return sType == "Number";
 		case cArray:
 			return sType == "Array";
 		case cFunction:
