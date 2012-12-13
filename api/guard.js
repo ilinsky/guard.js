@@ -47,4 +47,4 @@ fGuard.Arguments	= fGuard_sign(cGuard_Arguments, "Arguments");
 fGuard.Exception	= fGuard_sign(cGuard_Exception, "Exception");
 
 // Publish
-scope == window ? Guard	= fGuard : scope.Guard	= fGuard;
+window.Guard	= fGuard;

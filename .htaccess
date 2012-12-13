@@ -1,0 +1,5 @@
+## Rewrite engine
+RewriteEngine on
+
+##
+RewriteRule guard.js res/assemble.php?path=../api/
